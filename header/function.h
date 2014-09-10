@@ -29,11 +29,11 @@ void analyze(void *buffer, size_t size_of_buffer){
 }
 
 void process_tcp_data(void *buffer, size_t size){
-    struct iphdr *iph = (struct iphdr *)buffer;
-    struct tcphdr *tcp = (struct tcphdr *)(buffer + iph->ihl);
+    // struct iphdr *iph = (struct iphdr *)buffer;
+    // struct tcphdr *tcp = (struct tcphdr *)(buffer + iph->ihl);
 
     process_ip(buffer);
-    printf("TCP %u\n", ntohs(tcp->source));
+    // printf("TCP %u\n", ntohs(tcp->source));
 }
 
 void process_udp_data(void *buffer, size_t size){
@@ -60,12 +60,25 @@ void process_ip(void *buffer){
         case 0:
             index = insert(ip, data.index);
         case 1:
-            // detail_ip(index, iph);
+            detail_ip(index, iph);
             break;
     }
-    printf("%u\t", (source.sin_addr.s_addr));
-    printf("%s\t", inet_ntoa(source.sin_addr));
-    printf("%u\t", count);
+    // printf("%u\t", (source.sin_addr.s_addr));
+    // printf("%s\t", inet_ntoa(source.sin_addr));
+    // printf("%u\t", count);
+}
+
+void detail_ip(unsigned int index, struct iphdr *iph){
+    switch(iph->protocol){
+        case IPPROTO_TCP:
+            traffic[index].tcp_counter++;
+            traffic[index].data_processed_tcp += (ntohs(iph->tot_len)/1024);
+            printf("%u\t%u\t%u KB\t%s\tTCP\n",count, traffic[index].tcp_counter, traffic[index].data_processed_tcp,
+                inet_ntoa(source.sin_addr));
+            break;
+        // default:
+        //     // printf("");
+    }
 }
 
 search_data find(unsigned int ip){
@@ -75,15 +88,16 @@ search_data find(unsigned int ip){
     last = size_of_traffic - 1;
     mid = (first + last)/2;
     while(first <= last){
+        // printf("Find is running.\n");
         if(traffic[mid].name_be == ip){
             data.found = 1;
             data.index = mid;
             return data;
         }
-        if(traffic[mid].name_be > ip)
-            last = mid;
+        else if(traffic[mid].name_be > ip)
+            last = mid-1;
         else if(traffic[mid].name_be < ip)
-            first = mid;
+            first = mid+1;
         mid = (first+last)/2;
     }
     data.index = mid;
@@ -104,6 +118,7 @@ unsigned int insert(unsigned int ip, int index){
     }
 
     for(i=size_of_traffic; i>index; i--){
+        // printf("i'm running %d\n", i);
         traffic[i] = traffic[i-1];
     }
     size_of_traffic++;
@@ -118,6 +133,5 @@ unsigned int insert(unsigned int ip, int index){
     }
 
 }
-
 
 #endif /* _HEADER_FUNCTION_H */
