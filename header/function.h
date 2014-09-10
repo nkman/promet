@@ -1,10 +1,41 @@
 #ifndef _HEADER_FUNCTION_H
 #define _HEADER_FUNCTION_H
 
-void Analyze(void *, int);
-void process_tcp_data(void *, int);
-void process_udp_data(void *, int);
-void process_icmp_data(void *, int);
+void analyze(void *, size_t);
+void process_tcp_data(void *, size_t);
+void process_udp_data(void *, size_t);
+void process_icmp_data(void *, size_t);
+
+
+void analyze(void *buffer, size_t size_of_buffer){
+	count++;
+	struct iphdr *iph = (struct iphdr *)buffer;
+	switch(iph->protocol){
+		case 1:
+			process_icmp_data(buffer, size_of_buffer);
+			break;
+		case 6:
+			process_tcp_data(buffer, size_of_buffer);
+			break;
+		case 17:
+			process_udp_data(buffer, size_of_buffer);
+			break;
+		default:
+			printf("Cannot identify the protocol for this connection.\n");
+	}
+}
+
+void process_tcp_data(void *buffer, size_t size){
+	// struct ip
+}
+
+void process_udp_data(void *buffer, size_t size){
+
+}
+
+void process_icmp_data(void *buffer, size_t size){
+
+}
 
 #endif /* _HEADER_FUNCTION_H */
 

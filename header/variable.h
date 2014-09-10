@@ -16,4 +16,8 @@ struct traffic_detail{
 	unsigned int frequency;
 };
 
+/*
+ * Total count of all requests.
+ */
+static unsigned int count = 0 ;
 #endif /* _HEADER_VARIABLE_H */
