@@ -7,19 +7,13 @@
 
 #include <sys/socket.h>
 #include <sys/types.h>
-#include <netinet/in.h> /* struct sockaddr_in  */
-#include <netdb.h>
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <errno.h>
-#include <arpa/inet.h>
+#include <netinet/in.h>
 
+/*
 #include <linux/ip.h>
 #include <linux/tcp.h>
 #include <linux/udp.h>
-#include <linux/if_ether.h>
+*/
 
 #include "variable.h"
 #include "function.h"

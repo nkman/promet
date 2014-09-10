@@ -1,6 +1,7 @@
 #ifndef _HEADER_FUNCTION_H
 #define _HEADER_FUNCTION_H
 
+void Analyze(void *, int);
 void process_tcp_data(void *, int);
 void process_udp_data(void *, int);
 void process_icmp_data(void *, int);
@@ -10,6 +11,7 @@ void process_icmp_data(void *, int);
 
 
 /*
+http://sock-raw.org/papers/sock_raw
 enum {
 	IPPROTO_IP = 0,			/* Dummy protocol for TCP		
 	IPPROTO_ICMP = 1,		/* Internet Control Message Protocol	
