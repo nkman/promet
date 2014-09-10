@@ -7,6 +7,8 @@ void process_udp_data(void *, size_t);
 void process_icmp_data(void *, size_t);
 void process_ip(void *buffer);
 search_data find(unsigned int ip);
+unsigned int insert(unsigned int, int);
+void detail_ip(unsigned int, struct iphdr *);
 
 void analyze(void *buffer, size_t size_of_buffer){
     count++;
@@ -44,7 +46,7 @@ void process_icmp_data(void *buffer, size_t size){
 
 void process_ip(void *buffer){
     struct iphdr *iph = (struct iphdr *)buffer;
-    unsigned int ip;
+    unsigned int ip, index;
     search_data data;
 
     //Empty it everytime.
@@ -53,12 +55,12 @@ void process_ip(void *buffer){
     ip  = source.sin_addr.s_addr;
 
     data = find(ip);
+    index = data.index;
     switch(data.found){
         case 0:
-
-            break;
+            index = insert(ip, data.index);
         case 1:
-
+            // detail_ip(index, iph);
             break;
     }
     printf("%u\t", (source.sin_addr.s_addr));
@@ -88,5 +90,34 @@ search_data find(unsigned int ip){
     data.found = 0;
     return data;
 };
+
+unsigned int insert(unsigned int ip, int index){
+    int i;
+    Traffic T;
+    T.name_be = ip;
+    T.tcp_counter = T.udp_counter = T.data_processed_tcp = T.data_processed_udp = 0;
+
+    if(size_of_traffic == 0 || size_of_traffic == index){
+        traffic[size_of_traffic] = T;
+        size_of_traffic++;
+        return size_of_traffic-1;
+    }
+
+    for(i=size_of_traffic; i>index; i--){
+        traffic[i] = traffic[i-1];
+    }
+    size_of_traffic++;
+
+    if(traffic[index].name_be > ip){
+        traffic[index+1] = T;
+        return index+1;
+    }
+    else{
+        traffic[index] = T;
+        return index;
+    }
+
+}
+
 
 #endif /* _HEADER_FUNCTION_H */

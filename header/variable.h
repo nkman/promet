@@ -5,7 +5,7 @@ struct traffic_detail{
     __be32 name_be;
     char name[50];
     int tcp_counter;
-    unsigned int data_prosessed_tcp;
+    unsigned int data_processed_tcp;
     int udp_counter;
     unsigned int data_processed_udp;
 
