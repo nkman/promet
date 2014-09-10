@@ -1,6 +1,4 @@
 #include "header/header.h"
-#define port 443
-#define localhost "172.25.12.12"
 
 int main(int argc, char *argv[]){
 	socklen_t sockfd = 0;
@@ -16,8 +14,8 @@ int main(int argc, char *argv[]){
 		return 1;
 	}
 	while(1){
-		size = recvfrom(sockfd , buffer , 65536 , 0 , &saddr , &saddr_size);
-		printf ("Caught tcp packet: %s\n", buffer);
+		size = recvfrom(sockfd, buffer, 8192, 0, &saddr, &saddr_size);
+		analyze(buffer, size);
 	}
 
 	return 0;

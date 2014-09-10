@@ -2,6 +2,7 @@
 #define _HEADER_VARIABLE_H
 
 struct traffic_detail{
+	__be32 name_be;
 	char name[50];
 	int tcp_counter;
 	unsigned int data_prosessed_tcp;
@@ -16,8 +17,12 @@ struct traffic_detail{
 	unsigned int frequency;
 };
 
+typedef struct traffic_detail Traffic;
+static Traffic traffic[65535];
+static unsigned int size_of_traffic = 0;
 /*
  * Total count of all requests.
  */
 static unsigned int count = 0 ;
+static struct sockaddr_in source, destination;
 #endif /* _HEADER_VARIABLE_H */

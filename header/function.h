@@ -5,19 +5,19 @@ void analyze(void *, size_t);
 void process_tcp_data(void *, size_t);
 void process_udp_data(void *, size_t);
 void process_icmp_data(void *, size_t);
-
+void process_ip(void *buffer);
 
 void analyze(void *buffer, size_t size_of_buffer){
 	count++;
 	struct iphdr *iph = (struct iphdr *)buffer;
 	switch(iph->protocol){
-		case 1:
+		case IPPROTO_ICMP:
 			process_icmp_data(buffer, size_of_buffer);
 			break;
-		case 6:
+		case IPPROTO_TCP:
 			process_tcp_data(buffer, size_of_buffer);
 			break;
-		case 17:
+		case IPPROTO_UDP:
 			process_udp_data(buffer, size_of_buffer);
 			break;
 		default:
@@ -26,7 +26,11 @@ void analyze(void *buffer, size_t size_of_buffer){
 }
 
 void process_tcp_data(void *buffer, size_t size){
-	// struct ip
+	struct iphdr *iph = (struct iphdr *)buffer;
+	struct tcphdr *tcp = (struct tcphdr *)(buffer + iph->ihl);
+
+	process_ip(buffer);
+	printf("TCP %u\n", ntohs(tcp->source));
 }
 
 void process_udp_data(void *buffer, size_t size){
@@ -35,6 +39,17 @@ void process_udp_data(void *buffer, size_t size){
 
 void process_icmp_data(void *buffer, size_t size){
 
+}
+
+void process_ip(void *buffer){
+	struct iphdr *iph = (struct iphdr *)buffer;
+
+	//Empty it everytime.
+	memset(&source, 0, sizeof(source));
+	source.sin_addr.s_addr = iph->saddr;
+	printf("%u\t", (source.sin_addr.s_addr));
+	printf("%s\t", inet_ntoa(source.sin_addr));
+	printf("%u\t", count);
 }
 
 #endif /* _HEADER_FUNCTION_H */
@@ -67,4 +82,38 @@ enum {
 	IPPROTO_RAW	 = 255,		/* Raw IP packets			
 	IPPROTO_MAX
 };
+
+struct sockaddr_in {
+    short            sin_family;   // e.g. AF_INET
+    unsigned short   sin_port;     // e.g. htons(3490)
+    struct in_addr   sin_addr;     // see struct in_addr, below
+    char             sin_zero[8];  // zero this if you want to
+};
+
+struct in_addr {
+    unsigned long s_addr;  // load with inet_aton()
+};
+
+ struct iphdr {
+ 86 #if defined(__LITTLE_ENDIAN_BITFIELD)
+ 87         __u8    ihl:4,
+ 88                 version:4;
+ 89 #elif defined (__BIG_ENDIAN_BITFIELD)
+ 90         __u8    version:4,
+ 91                 ihl:4;
+ 92 #else
+ 93 #error  "Please fix <asm/byteorder.h>"
+ 94 #endif
+ 95         __u8    tos;
+ 96         __be16  tot_len;
+ 97         __be16  id;
+ 98         __be16  frag_off;
+ 99         __u8    ttl;
+100         __u8    protocol;
+101         __sum16 check;
+102         __be32  saddr;
+103         __be32  daddr;
+104         /*The options start here. 
+105 };
+
 */
