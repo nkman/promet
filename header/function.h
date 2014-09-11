@@ -80,13 +80,13 @@ void process_tcp_data(void *buffer, size_t size){
 /* ------------------------------------------ */
 
 void process_udp_data(void *buffer, size_t size){
-
+    printf("UDP Data\n");
 }
 
 /* ------------------------------------------ */
 
 void process_icmp_data(void *buffer, size_t size){
-
+    printf("ICMP DATA\n");
 }
 
 /* ------------------------------------------ */
@@ -119,7 +119,7 @@ void detail_ip(unsigned int index, struct iphdr *iph){
         case IPPROTO_TCP:
             traffic[index].tcp_counter++;
             traffic[index].data_processed_tcp += (ntohs(iph->tot_len)/1024);
-            printf("%u\t%u\t%u KB\t%s\tTCP\n",count, traffic[index].tcp_counter, traffic[index].data_processed_tcp,
+            printf("%u\t%u\t%uKB\t%s\tTCP\n",count, traffic[index].tcp_counter, traffic[index].data_processed_tcp,
                 inet_ntoa(source.sin_addr));
             break;
     }
@@ -167,6 +167,8 @@ unsigned int insert(unsigned int ip, int index){
         i--;
     }
     i++;
+
+    return i;
 }
 
 /* ------------------------------------------ */
