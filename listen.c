@@ -51,5 +51,11 @@ int main(int argc, char *argv[]){
 		analyze(buffer, size);
 	}
 
+	else{
+		printf("Un-recognized proto. Try again.\n");
+		printf("Supported protos are :\n");
+		printf("TCP\tUDP\tICMP\n");
+	}
+
 	return 0;
 }
