@@ -46,6 +46,10 @@ unsigned int insert(unsigned int, int);
  */
 void detail_ip(unsigned int, struct iphdr *);
 
+/*
+ * Swap function.
+ */
+void swap(Traffic *, Traffic *);
 /* ------------------------------------------ */
 
 void analyze(void *buffer, size_t size_of_buffer){
@@ -154,6 +158,17 @@ unsigned int insert(unsigned int ip, int index){
     T.name_be = ip;
     T.tcp_counter = T.udp_counter = T.data_processed_tcp = T.data_processed_udp = 0;
 
+    traffic[size_of_traffic] = T;
+    size_of_traffic++;
+
+    i = size_of_traffic - 2;
+    while(i>=0 && traffic[i].name_be > traffic[i+1].name_be){
+        swap(&traffic[i], &traffic[i+1]);
+        i--;
+    }
+
+    return i+1;
+    /*
     if(size_of_traffic == 0 || size_of_traffic == index){
         traffic[size_of_traffic] = T;
         size_of_traffic++;
@@ -173,9 +188,15 @@ unsigned int insert(unsigned int ip, int index){
         traffic[index] = T;
         return index;
     }
+    */
 
 }
 
 /* ------------------------------------------ */
 
+void swap(Traffic *t1, Traffic *t2){
+    Traffic temp = *t1;
+    *t2 = *t1;
+    *t1 = temp;
+}
 #endif /* _HEADER_FUNCTION_H */
