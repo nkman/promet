@@ -166,37 +166,17 @@ unsigned int insert(unsigned int ip, int index){
         swap(&traffic[i], &traffic[i+1]);
         i--;
     }
-
-    return i+1;
-    /*
-    if(size_of_traffic == 0 || size_of_traffic == index){
-        traffic[size_of_traffic] = T;
-        size_of_traffic++;
-        return size_of_traffic-1;
-    }
-
-    for(i=size_of_traffic; i>index; i--){
-        traffic[i] = traffic[i-1];
-    }
-    size_of_traffic++;
-
-    if(traffic[index].name_be > ip){
-        traffic[index+1] = T;
-        return index+1;
-    }
-    else{
-        traffic[index] = T;
-        return index;
-    }
-    */
-
+    i++;
 }
 
 /* ------------------------------------------ */
 
 void swap(Traffic *t1, Traffic *t2){
-    Traffic temp = *t1;
+    Traffic temp = *t2;
     *t2 = *t1;
     *t1 = temp;
 }
+
+/* ------------------------------------------ */
+
 #endif /* _HEADER_FUNCTION_H */
